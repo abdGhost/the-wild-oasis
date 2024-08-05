@@ -14,7 +14,6 @@ import FormRow from "../../ui/FormRow";
 function CreateCabinForm() {
   const { register, handleSubmit, reset, getValues, formState } = useForm();
   const { errors } = formState;
-  console.log(errors);
 
   const queryClient = useQueryClient();
 
@@ -29,16 +28,20 @@ function CreateCabinForm() {
   });
 
   function onSubmit(data) {
-    mutate(data);
+    mutate({ ...data, image: data.image[0] });
   }
 
   function onError(error) {
-    console.log(error);
+    // console.log(error);
   }
 
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)}>
-      <FormRow label="Cabin name" error={errors?.name?.message}>
+      <FormRow
+        label="Cabin name"
+        disabled={isCreating}
+        error={errors?.name?.message}
+      >
         <Input
           type="text"
           id="name"
@@ -48,7 +51,11 @@ function CreateCabinForm() {
         />
       </FormRow>
 
-      <FormRow label="Maximum Capcaity" error={errors?.maxCapacity?.message}>
+      <FormRow
+        label="Maximum Capcaity"
+        disabled={isCreating}
+        error={errors?.maxCapacity?.message}
+      >
         <Input
           type="number"
           id="maxCapacity"
@@ -62,7 +69,11 @@ function CreateCabinForm() {
         />
       </FormRow>
 
-      <FormRow label="Regular Price" error={errors?.regularPrice?.message}>
+      <FormRow
+        label="Regular Price"
+        disabled={isCreating}
+        error={errors?.regularPrice?.message}
+      >
         <Input
           type="number"
           id="regularPrice"
@@ -76,7 +87,11 @@ function CreateCabinForm() {
         />
       </FormRow>
 
-      <FormRow label="Discount" error={errors?.discount?.message}>
+      <FormRow
+        label="Discount"
+        disabled={isCreating}
+        error={errors?.discount?.message}
+      >
         <Input
           type="number"
           id="discount"
@@ -92,6 +107,7 @@ function CreateCabinForm() {
 
       <FormRow
         label="Description for website"
+        disabled={isCreating}
         error={errors?.description?.message}
       >
         <Textarea
@@ -105,7 +121,14 @@ function CreateCabinForm() {
       </FormRow>
 
       <FormRow label="Cabin Photo">
-        <FileInput id="image" accept="image/*" />
+        <FileInput
+          id="image"
+          accept="image/*"
+          type="file"
+          {...register("image", {
+            required: "This field is required",
+          })}
+        />
       </FormRow>
 
       <FormRow>
